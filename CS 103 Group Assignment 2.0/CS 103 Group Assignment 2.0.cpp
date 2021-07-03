@@ -29,7 +29,7 @@ void prog_stu();
 void search_parent();
 
 
-int choice = 0, progress = 0, class_numb;
+int choice = 0, progress = 0, class_numb, trm_tally = 0;
 char another = 'n';
 fstream file;
 int op_t, op_p;
@@ -37,6 +37,7 @@ char answer = 'y';
 char username_t[20], password_t[20];
 bool flag_t = false, flag_a = false, flag_p = false;
 char username_p[20], password_p[20];
+
 
 
 struct Student_Rec
@@ -69,7 +70,7 @@ int main()
 {
     //inserting intro into main
     intro();
-
+    
     cout << "\n\n";
     return 0;
 }
@@ -253,7 +254,7 @@ void add_student()
 {
     do
     {
-        s.grade_score = 0;
+       s.grade_score = 0;
         system("CLS");
         //Getting user input
         cout << "Enter Student Infomation:\n";
@@ -393,6 +394,7 @@ void add_student()
             s.overall_prog = "Needs_Help";
         }
 
+        cin.ignore();
         //Name of other class
         cout << "What is the name of the other class they are taking";
         cin.getline(s.other_name, 51);
@@ -415,7 +417,10 @@ void add_student()
         {
             cout << "Sorry class number not found";
         }
+        
 
+
+        
         file << s.full_name << "\n";
         file << s.gen << "\n";
         file << s.maths << "\n";
@@ -424,6 +429,7 @@ void add_student()
         file << s.read << "\n";
         file << s.other_name << ": " << s.other << "\n";
         file << s.overall_prog << "\n";
+        
 
         file.close();
 
@@ -476,7 +482,7 @@ void teacher_screen()
 
         if (op_t == 1)
         {
-
+            view_student();
         }
         else if (op_t == 2)
         {
@@ -582,7 +588,7 @@ void parent_regi(struct Parent& p)
     cout << "\nEnter child classroom number : ";
     cin >> p.c_class;
     cin.ignore();
-    cout << "\nEnter child parent/caregiver full name : ";
+    cout << "\nEnter child parent/ caregiver full name : ";
     cin.getline(p.p_f_name, 30);
     cout << "\nEnter emergency contact number : ";
     cin >> p.emer_con_numb;
@@ -597,8 +603,7 @@ void parent_regi(struct Parent& p)
 
 void parent_screen()
 {
-    int class_no = 0;
-    char name[30];
+    
 
     while (op_p != 3)
     {
@@ -611,74 +616,7 @@ void parent_screen()
 
         if (op_p == 1)
         {
-            while (class_no != 1 && class_no != 2)
-            {
-                cout << "\n\n Please enter the class number of the student (1 or 2) : ";
-                cin >> class_no;
-
-                if (class_no == 1)
-                {
-                    cout << "\n\nPlease enter the student's full name : ";
-                    cin >> name;
-
-                    file.open("stu_rec_room_1.dat", ios::out | ios::app | ios::binary);
-
-                    while (!file.eof())
-                    {
-                        file.read(reinterpret_cast<char*>(&s), sizeof(s));
-
-                        if ((strcmp(name, s.full_name) == 0))
-                        {
-                            cout << "\n\nFirst Name  : " << s.full_name << "\n";
-                            cout << "Gender          : " << s.gen << "\n";
-                            cout << "Maths           : " << s.maths << "\n";
-                            cout << "Science         : " << s.sci << "\n";
-                            cout << "Writing         : " << s.writing << "\n";
-                            cout << "Reading         : " << s.read << "\n";
-                            cout << s.other_name << "\n";
-
-                            line();
-                        }
-                        else
-                        {
-                            cout << "\n\nRecord not found";
-                        }
-                    }
-                }
-                else if (class_no == 2)
-                {
-                    cout << "\n\nPlease enter the student's full name : ";
-                    cin >> name;
-
-                    file.open("stu_rec_room_2.dat", ios::out | ios::app | ios::binary);
-
-                    while (!file.eof())
-                    {
-                        file.read(reinterpret_cast<char*>(&s), sizeof(s));
-
-                        if ((strcmp(name, s.full_name) == 0))
-                        {
-                            cout << "\n\nFirst Name  : " << s.full_name << "\n";
-                            cout << "Gender          : " << s.gen << "\n";
-                            cout << "Maths           : " << s.maths << "\n";
-                            cout << "Science         : " << s.sci << "\n";
-                            cout << "Writing         : " << s.writing << "\n";
-                            cout << "Reading         : " << s.read << "\n";
-                            cout << s.other_name << "\n";
-
-                            line();
-                        }
-                        else
-                        {
-                            cout << "\n\nRecord not found";
-                        }
-                    }
-                }
-                else
-                {
-                    cout << "\n\n Please enter a valid class number (1 or 2)";
-                }
-            }
+            view_student();
         }
         else if (op_p == 2)
         {
@@ -701,14 +639,23 @@ void parent_screen()
 void admin()
 {
     char a_user[20], a_pass[20];
+    line();
+    
 
+    cout << "Please enter admin username and password";
+    cout << "\nUsername: ";
+    cin >> a.a_user;
+    cout << "\nPassword: ";
+    cin >> a.a_pass;
+    
     file.open("Admin.dat", ios::out | ios::app | ios::binary);
 
     if (file.is_open())
     {
         while (!file.eof())
         {
-            file.read(reinterpret_cast<char*>(&a), sizeof(a));
+            file.getline(a.a_user, 20);
+            file.getline(a.a_pass, 20);
 
             if ((strcmp(a_user, a.a_user) == 0) && (strcmp(a_pass, a.a_pass) == 0))
             {
@@ -754,7 +701,7 @@ void admin_screen()
 
     } while (choice != 4);
 
-
+    choice = 0;
 }
 
 
@@ -903,4 +850,85 @@ void search_parent()
     }
 
     file.close();
+}
+void edit_student()
+{
+
+}
+void update_student()
+{
+
+}
+void delete_student()
+{
+
+}
+
+
+
+void view_student()
+{
+    
+    int class_no = 0;
+    char name[30];
+    while (class_no != 1 && class_no != 2)
+    {
+        trm_tally = 0;
+        cout << "\n\n Please enter the class number of the student (1 or 2) : ";
+        cin >> class_no;
+
+        if (class_no == 1)
+        {
+            cout << "\n\nPlease enter the student's full name : ";
+            cin >> name;
+
+            file.open("stu_rec_room_1.dat", ios::out | ios::app | ios::binary);
+        }
+ 
+        else if (class_no == 2)
+        {
+            cout << "\n\nPlease enter the student's full name : ";
+            cin >> name;
+
+            file.open("stu_rec_room_2.dat", ios::out | ios::app | ios::binary);
+
+           
+        }
+        else
+        {
+            cout << "\n\n Please enter a valid class number (1 or 2)";
+        }
+        while (!file.eof())
+        {
+            file.getline(s.full_name, 51);
+            file.getline(s.gen, 51);
+            file.getline(s.maths_s, 20);
+            file.getline(s.sci_s, 20);
+            file.getline(s.writing_s, 20);
+            file.getline(s.read_s, 20);
+            file.getline(s.other_s, 51);
+            file.getline(s.overall_prog_s, 51);
+
+            if ((strcmp(name, s.full_name) == 0))
+            {
+                
+                cout << "\n Term " << trm_tally << ":";
+                
+                cout << "\n\nFirst Name  : " << s.full_name << "\n";
+                cout << "Gender          : " << s.gen << "\n";
+                cout << "Maths           : " << s.maths << "\n";
+                cout << "Science         : " << s.sci << "\n";
+                cout << "Writing         : " << s.writing << "\n";
+                cout << "Reading         : " << s.read << "\n";
+                cout << s.other_name << "\n";
+
+                
+                line();
+            }
+            else
+            {
+                cout << "\n\nRecord not found";
+            }
+        }
+    }
 }
