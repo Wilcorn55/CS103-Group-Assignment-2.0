@@ -18,7 +18,6 @@ void update_student();
 void delete_student();
 void view_student();
 void teacher_login(char[], char[]);
-void teacher_screen();
 void teacher_regi(struct Teacher&);
 void parent_login(char[], char[]);
 void admin_screen();
@@ -27,27 +26,37 @@ void parent_screen();
 void help_stu();
 void prog_stu();
 void search_parent();
+void student_subjects();
+void class_1_del();
+void class_2_del();
 
-
-int choice = 0, progress = 0, class_numb, trm_tally = 0;
+int choice = 0, progress = 0, class_numb, trm_tally = 0, position = 0;
 char another = 'n';
-fstream file;
+fstream file, tempfile;
 int op_t, op_p;
 char answer = 'y';
 char username_t[20], password_t[20];
 bool flag_t = false, flag_a = false, flag_p = false;
 char username_p[20], password_p[20];
-
+int class_no = 0;
+char name[30];
 
 
 struct Student_Rec
 {
-    char full_name[51], other_name[51], gen[20];
+    char full_name[51], other_name[51], gen[20], other_total[51];
     string maths, sci, writing, read, other, overall_prog;
     int grade_score;
     char maths_s[20], sci_s[20], writing_s[20], read_s[20], other_s[20], overall_prog_s[20];
 }s;
 
+struct Student_Rec_cpy
+{
+    char full_name[51], other_name[51], gen[20];
+    string maths, sci, writing, read, other, overall_prog;
+    int grade_score;
+    char maths_s[20], sci_s[20], writing_s[20], read_s[20], other_s[20], overall_prog_s[20];
+}s2;
 
 struct Teacher
 {
@@ -132,6 +141,7 @@ void intro()
         case 1:
             for (int i = 0; i < 3; i++)
             {
+                
                 parent_login(username_p, password_p);
                 if (flag_p == true)
                 {
@@ -163,7 +173,7 @@ void intro()
                     i = 2;
                     cout << "\n\n Login Success!";
                     line();
-                    teacher_screen();
+                    student();
                     flag_t = false;
                 }
                 else if (i < 2 && !flag_t)
@@ -199,6 +209,7 @@ void intro()
                     cout << "\n\n Sorry, please try again after 5 minutes\n";
                 }
             }
+            admin_screen();
             break;
         case 6:
 
@@ -212,11 +223,12 @@ void intro()
 
 void student()
 {
-    system("CLS");
-    cout << "Welcome to the Student Record what would you like to do?";
+    
+    
 
-    while (choice != 6)
-    {
+    
+        cout << "Welcome to the Student Record what would you like to do?";
+        
         //Student Record options
         cout << "\n1. Add Student\n";
         cout << "2. Edit Student Record\n";
@@ -225,7 +237,6 @@ void student()
         cout << "5. View the Student Records\n";
         cout << "6. Exit\n";
         cin >> choice;
-
         //switch case which will link to all options
         switch (choice)
         {
@@ -233,13 +244,16 @@ void student()
             add_student();
             break;
         case 2:
+            edit_student();
             break;
         case 3:
+            delete_student();
             break;
         case 4:
+            update_student();
             break;
         case 5:
-
+            view_student();
             break;
         case 6:
             break;
@@ -247,7 +261,7 @@ void student()
             cout << "Please enter a Valid Option";
             break;
         }
-    }
+    
 }
 
 void add_student()
@@ -264,174 +278,7 @@ void add_student()
         cout << "Gender:";
         cin >> s.gen;
 
-        //Switch cases to for each subject
-
-        cout << "How are they doing in Maths:";
-        cout << "\n1. Achieveing\n";
-        cout << "2. Progressing\n";
-        cout << "3. Needs Help\n";
-        cin >> progress;
-        
-        switch (progress)
-        {
-        case 1:
-            s.maths = "Achieving";
-            break;
-        case 2:
-            s.maths = "Progressing";
-            break;
-        case 3:
-            s.maths = "Needs_Help";
-            break;
-        default:
-            cout << "Please enter a Valid Option";
-            break;
-        }
-        s.grade_score = +progress;
-
-        cout << "How are they doing in Science:";
-        cout << "\n1. Achieveing\n";
-        cout << "2. Progressing\n";
-        cout << "3. Needs Help\n";
-        cin >> progress;
-        
-        switch (progress)
-        {
-        case 1:
-            s.sci = "Achieving";
-            break;
-        case 2:
-            s.sci = "Progressing";
-            break;
-        case 3:
-            s.sci = "Needs_Help";
-            break;
-        default:
-            cout << "Please enter a Valid Option";
-            break;
-        }
-        s.grade_score = +progress;
-
-        cout << "How are they doing in Writing:";
-        cout << "\n1. Achieveing\n";
-        cout << "2. Progressing\n";
-        cout << "3. Needs Help\n";
-        cin >> progress;
-        
-        switch (progress)
-        {
-        case 1:
-            s.writing = "Achieving";
-            break;
-        case 2:
-            s.writing = "Progressing";
-            break;
-        case 3:
-            s.writing = "Needs_Help";
-            break;
-        default:
-            cout << "Please enter a Valid Option";
-            break;
-        }
-        s.grade_score = +progress;
-
-        cout << "How are they doing in Reading:";
-        cout << "\n1. Achieveing\n";
-        cout << "2. Progressing\n";
-        cout << "3. Needs Help\n";
-        cin >> progress;
-        
-        switch (progress)
-        {
-        case 1:
-            s.read = "Achieving";
-            break;
-        case 2:
-            s.read = "Progressing";
-            break;
-        case 3:
-            s.read = "Needs_Help";
-            break;
-        default:
-            cout << "Please enter a Valid Option";
-            break;
-        }
-        s.grade_score = +progress;
-
-        cout << "How are they doing in their other Class:";
-        cout << "\n1. Achieveing\n";
-        cout << "2. Progressing\n";
-        cout << "3. Needs Help\n";
-        cin >> progress;
-        
-        switch (progress)
-        {
-        case 1:
-            s.other = "Achieving";
-            break;
-        case 2:
-            s.other = "Progressing";
-            break;
-        case 3:
-            s.other = "Needs_Help";
-            break;
-        default:
-            cout << "Please enter a Valid Option";
-            break;
-        }
-        s.grade_score = +progress;
-        
-        if (progress <= 8)
-        {
-            s.overall_prog = "Achieving";
-        }
-        if (progress > 8 && progress <= 12)
-        {
-            s.overall_prog = "Progressing";
-        }
-        if (progress > 12 && progress <= 15)
-        {
-            s.overall_prog = "Needs_Help";
-        }
-
-        cin.ignore();
-        //Name of other class
-        cout << "What is the name of the other class they are taking";
-        cin.getline(s.other_name, 51);
-
-        //getting class number
-        cout << "What is the number of the class they are in: ";
-        cin >> class_numb;
-
-        if (class_numb == 1)
-        {
-            //Storing in room 1 File
-            file.open("stu_rec_room_1.dat", ios::out | ios::app | ios::binary);
-        }
-        if (class_numb == 2)
-        {
-            //Storing in room 2File
-            file.open("stu_rec_room_2.dat", ios::out | ios::app | ios::binary);
-        }
-        else
-        {
-            cout << "Sorry class number not found";
-        }
-        
-
-
-        
-        file << s.full_name << "\n";
-        file << s.gen << "\n";
-        file << s.maths << "\n";
-        file << s.sci << "\n";
-        file << s.writing << "\n";
-        file << s.read << "\n";
-        file << s.other_name << ": " << s.other << "\n";
-        file << s.overall_prog << "\n";
-        
-
-        file.close();
+        student_subjects();
 
         cout << "\n\nDo you want to enter another record y/n ?  ";
         cin >> another;
@@ -469,34 +316,7 @@ void teacher_login(char usern[], char passw[])
     file.close();
 }
 
-void teacher_screen()
-{
-    while (op_t != 3)
-    {
-        cout << "\nWould you like to :";
-        cout << "\n1. View your student record";
-        cout << "\n2. Create student record";
-        cout << "\n3. Quit";
-        cout << "\n\nPlease enter an option : ";
-        cin >> op_t;
 
-        if (op_t == 1)
-        {
-            view_student();
-        }
-        else if (op_t == 2)
-        {
-            add_student();
-        }
-        else if (op_t != 1 && op_t != 2 && op_t != 3)
-        {
-            cout << "\n\nPlease enter a valid option";
-            line();
-        }
-    }
-
-    op_t = 0;
-}
 
 void teacher_regi(struct Teacher& tea)
 {
@@ -569,7 +389,7 @@ void parent_regi(struct Parent& p)
     line();
     cout << "\nPlease enter the following information\n";
 
-    file.open("Parents.dat", ios::out | ios::app | ios::binary);
+    file.open("Parent.dat", ios::out | ios::app | ios::binary);
 
     cout << "\nEnter full name : ";
     cin.getline(p.f_name, 30);
@@ -644,9 +464,9 @@ void admin()
 
     cout << "Please enter admin username and password";
     cout << "\nUsername: ";
-    cin >> a.a_user;
+    cin >> a_user;
     cout << "\nPassword: ";
-    cin >> a.a_pass;
+    cin >> a_pass;
     
     file.open("Admin.dat", ios::out | ios::app | ios::binary);
 
@@ -654,10 +474,9 @@ void admin()
     {
         while (!file.eof())
         {
-            file.getline(a.a_user, 20);
-            file.getline(a.a_pass, 20);
+            file.read(reinterpret_cast<char*>(&p), sizeof(p));
 
-            if ((strcmp(a_user, a.a_user) == 0) && (strcmp(a_pass, a.a_pass) == 0))
+            if ((a_user == a.a_user) && (a_pass == a.a_pass))
             {
                 flag_a = true;
             }
@@ -677,10 +496,10 @@ void admin_screen()
     line();
     do
     {
-        cout << "What would you like to do?";
-        cout << "1.Find Students that need Help";
-        cout << "2.Find Students that are progressing";
-        cout << "3.Find Parents";
+        cout << "What would you like to do?\n";
+        cout << "1.Find Students that need Help\n";
+        cout << "2.Find Students that are progressing\n";
+        cout << "3.Find Parents\n";
         cin >> choice;
         switch (choice)
         {
@@ -716,13 +535,13 @@ void help_stu()
     if (class_numb == 1)
     {
         //Opening Room 1 file
-        file.open("stu_rec_room_1.dat", ios::out | ios::app | ios::binary);
+        file.open("stu_rec_room_1.dat", ios::in | ios::out | ios::binary);
 
     }
     if (class_numb == 2)
     {
         //Opening Room 2 file
-        file.open("stu_rec_room_2.dat", ios::out | ios::app | ios::binary);
+        file.open("stu_rec_room_2.dat", ios::in | ios::out | ios::binary);
 
     }
     else
@@ -733,14 +552,7 @@ void help_stu()
     while (!file.eof())
     {
         //Searching the File
-        file.getline(s.full_name, 51);
-        file.getline(s.gen, 51);
-        file.getline(s.maths_s, 20);
-        file.getline(s.sci_s, 20);
-        file.getline(s.writing_s, 20);
-        file.getline(s.read_s, 20);
-        file.getline(s.other_s, 51);
-        file.getline(s.overall_prog_s, 51);
+        file.read(reinterpret_cast<char*>(&s), sizeof(s));
 
 
         //Comparing the search with the file
@@ -753,7 +565,7 @@ void help_stu()
             cout << "Science: " << s.sci_s << "\n";
             cout << "Writing: " << s.writing_s << "\n";
             cout << "Reading: " << s.read_s << "\n";
-            cout << s.other_s << "\n";
+            cout << s.other_name << ":" << s.other << "\n";
             break;
         }
     }
@@ -783,21 +595,13 @@ void prog_stu()
     }
     else
     {
-        cout << "Sorry class number not found";
+        cout << "\nSorry class number not found\n";
     }
 
     while (!file.eof())
     {
         //Searching the File
-        file.getline(s.full_name, 51);
-        file.getline(s.gen, 51);
-        file.getline(s.maths_s, 20);
-        file.getline(s.sci_s, 20);
-        file.getline(s.writing_s, 20);
-        file.getline(s.read_s, 20);
-        file.getline(s.other_s, 51);
-        file.getline(s.overall_prog_s, 51);
-
+        file.read(reinterpret_cast<char*>(&s), sizeof(s));
 
         //Comparing the search with the file
         if (s.overall_prog_s == "Progressing")
@@ -809,7 +613,7 @@ void prog_stu()
             cout << "Science: " << s.sci_s << "\n";
             cout << "Writing: " << s.writing_s << "\n";
             cout << "Reading: " << s.read_s << "\n";
-            cout << s.other_s << "\n";
+            cout << s.other_name << ":" << s.other << "\n";
             break;
         }
     }
@@ -840,7 +644,20 @@ void search_parent()
 
             if (strcmp(f_name_search, p.f_name) == 0)
             {
+                cout << "\n\nFull Name: " << p.f_name << "\n";
+                cout << "Gender: " << p.gen << "\n";
+                cout << "Date of Birth: " << p.dob << "\n";
+                cout << "Email: " << p.email << "\n";
+                cout << "Contact Number: " << p.con_numb << "\n";
+                cout << "Child full name: " << p.c_f_name << "\n";
+                cout << "Child class number: " << p.c_class << "\n";
+                cout << "Parent/ Caregiver Name: " << p.p_f_name << "\n";
+                cout << "Emergancy number: " << p.emer_con_numb << "\n";
 
+            }
+            else
+            {
+                cout << "Unable to find Parent Info ...";
             }
         }
     }
@@ -851,9 +668,91 @@ void search_parent()
 
     file.close();
 }
+
+
+
 void edit_student()
 {
+    bool edit_f = false;
+    cout << "\n\n Please enter the class number of the student (1 or 2) : ";
+    cin >> class_no;
 
+    if (class_no == 1)
+    {
+        cout << "\n\nPlease enter the student's full name : ";
+        cin >> name;
+
+        file.open("stu_rec_room_1.dat", ios::in | ios::binary);
+    }
+
+    else if (class_no == 2)
+    {
+        cout << "\n\nPlease enter the student's full name : ";
+        cin >> name;
+
+        file.open("stu_rec_room_2.dat", ios::in | ios::binary);
+
+
+    }
+    else
+    {
+        cout << "\n\n Please enter a valid class number (1 or 2)";
+    }
+
+    if (file.is_open())
+    {
+        while (!file.eof())
+        {
+            file.read(reinterpret_cast<char*>(&s), sizeof(s)); // reading the content from the file 
+
+            position = file.tellg();  // current cursor position 
+
+            if ((name == s.full_name))
+            {
+                cout << "\n\nFirst Name  : " << s2.full_name << "\n";
+                cout << "Gender          : " << s2.gen << "\n";
+                cout << "Maths           : " << s2.maths << "\n";
+                cout << "Science         : " << s2.sci << "\n";
+                cout << "Writing         : " << s2.writing << "\n";
+                cout << "Reading         : " << s2.read << "\n";
+                cout << s2.other_name << ":" << s2.other << "\n";
+                cout << "Overall Progress: " << s2.overall_prog << "\n";
+
+                file.seekp(position-(sizeof(s)));
+
+                student_subjects();
+                
+
+                strcpy_s(s2.maths_s, s.maths_s);
+                strcpy_s(s2.sci_s, s.sci_s);
+                strcpy_s(s2.writing_s, s.writing_s);
+                strcpy_s(s2.read_s, s.read_s);
+                strcpy_s(s2.other_name, s.other_name);
+                strcpy_s(s2.other_s, s.other_s);
+                strcpy_s(s2.overall_prog_s, s.overall_prog_s);
+                
+                file.write(reinterpret_cast<char*>(&s), sizeof(s)); // writing the file to the 
+
+                edit_f = false;
+                break;
+            }
+            else
+            {
+                edit_f = true;
+            }
+        }
+    }
+    else
+    {
+        cout << "\nFile unable to access ....";
+    }
+
+    if (edit_f == true)
+    {
+        cout << "\nRecord not found...";
+    }
+
+    file.close();
 }
 void update_student()
 {
@@ -861,36 +760,54 @@ void update_student()
 }
 void delete_student()
 {
+   
+
+    cout << "\n\n Please enter the class number of the student (1 or 2) : ";
+    cin >> class_no;
+
+    if (class_no == 1)
+    {
+        class_1_del();
+    }
+
+    else if (class_no == 2)
+    {
+        class_2_del();
+    }
+    else
+    {
+        cout << "\n\n Please enter a valid class number (1 or 2)";
+    }
 
 }
+
 
 
 
 void view_student()
 {
     
-    int class_no = 0;
-    char name[30];
+    
     while (class_no != 1 && class_no != 2)
     {
-        trm_tally = 0;
+        trm_tally = 1;
         cout << "\n\n Please enter the class number of the student (1 or 2) : ";
         cin >> class_no;
 
         if (class_no == 1)
         {
-            cout << "\n\nPlease enter the student's full name : ";
+            cout << "\n\nPlease enter the student's first name : ";
             cin >> name;
 
-            file.open("stu_rec_room_1.dat", ios::out | ios::app | ios::binary);
+            file.open("stu_rec_room_1.dat", ios::in | ios::app | ios::binary);
         }
  
         else if (class_no == 2)
         {
-            cout << "\n\nPlease enter the student's full name : ";
+            cout << "\n\nPlease enter the student's first name : ";
             cin >> name;
 
-            file.open("stu_rec_room_2.dat", ios::out | ios::app | ios::binary);
+            file.open("stu_rec_room_2.dat", ios::in | ios::app | ios::binary);
 
            
         }
@@ -900,14 +817,7 @@ void view_student()
         }
         while (!file.eof())
         {
-            file.getline(s.full_name, 51);
-            file.getline(s.gen, 51);
-            file.getline(s.maths_s, 20);
-            file.getline(s.sci_s, 20);
-            file.getline(s.writing_s, 20);
-            file.getline(s.read_s, 20);
-            file.getline(s.other_s, 51);
-            file.getline(s.overall_prog_s, 51);
+            file.read(reinterpret_cast<char*>(&s), sizeof(s));
 
             if ((strcmp(name, s.full_name) == 0))
             {
@@ -920,7 +830,7 @@ void view_student()
                 cout << "Science         : " << s.sci << "\n";
                 cout << "Writing         : " << s.writing << "\n";
                 cout << "Reading         : " << s.read << "\n";
-                cout << s.other_name << "\n";
+                cout << s.other_name << " : " << s.other << "\n";
 
                 
                 line();
@@ -931,4 +841,311 @@ void view_student()
             }
         }
     }
+}
+
+void student_subjects()
+{
+    //Switch cases to for each subject
+
+    cout << "How are they doing in Maths:";
+    cout << "\n1. Achieveing\n";
+    cout << "2. Progressing\n";
+    cout << "3. Needs Help\n";
+    cin >> progress;
+
+    switch (progress)
+    {
+    case 1:
+        s.maths = "Achieving";
+        break;
+    case 2:
+        s.maths = "Progressing";
+        break;
+    case 3:
+        s.maths = "Needs_Help";
+        break;
+    default:
+        cout << "Please enter a Valid Option";
+        break;
+    }
+    s.grade_score = +progress;
+
+    cout << "How are they doing in Science:";
+    cout << "\n1. Achieveing\n";
+    cout << "2. Progressing\n";
+    cout << "3. Needs Help\n";
+    cin >> progress;
+
+    switch (progress)
+    {
+    case 1:
+        s.sci = "Achieving";
+        break;
+    case 2:
+        s.sci = "Progressing";
+        break;
+    case 3:
+        s.sci = "Needs_Help";
+        break;
+    default:
+        cout << "Please enter a Valid Option";
+        break;
+    }
+    s.grade_score = +progress;
+
+    cout << "How are they doing in Writing:";
+    cout << "\n1. Achieveing\n";
+    cout << "2. Progressing\n";
+    cout << "3. Needs Help\n";
+    cin >> progress;
+
+    switch (progress)
+    {
+    case 1:
+        s.writing = "Achieving";
+        break;
+    case 2:
+        s.writing = "Progressing";
+        break;
+    case 3:
+        s.writing = "Needs_Help";
+        break;
+    default:
+        cout << "Please enter a Valid Option";
+        break;
+    }
+    s.grade_score = +progress;
+
+    cout << "How are they doing in Reading:";
+    cout << "\n1. Achieveing\n";
+    cout << "2. Progressing\n";
+    cout << "3. Needs Help\n";
+    cin >> progress;
+
+    switch (progress)
+    {
+    case 1:
+        s.read = "Achieving";
+        break;
+    case 2:
+        s.read = "Progressing";
+        break;
+    case 3:
+        s.read = "Needs_Help";
+        break;
+    default:
+        cout << "Please enter a Valid Option";
+        break;
+    }
+    s.grade_score = +progress;
+
+    cout << "How are they doing in their other Class:";
+    cout << "\n1. Achieveing\n";
+    cout << "2. Progressing\n";
+    cout << "3. Needs Help\n";
+    cin >> progress;
+
+    switch (progress)
+    {
+    case 1:
+        s.other = "Achieving";
+        break;
+    case 2:
+        s.other = "Progressing";
+        break;
+    case 3:
+        s.other = "Needs_Help";
+        break;
+    default:
+        cout << "Please enter a Valid Option";
+        break;
+    }
+    s.grade_score = +progress;
+
+    if (progress <= 8)
+    {
+        s.overall_prog = "Achieving";
+    }
+    if (progress > 8 && progress <= 12)
+    {
+        s.overall_prog = "Progressing";
+    }
+    if (progress > 12 && progress <= 15)
+    {
+        s.overall_prog = "Needs_Help";
+    }
+
+    cin.ignore();
+    //Name of other class
+    cout << "What is the name of the other class they are taking";
+    cin.getline(s.other_name, 51);
+
+    
+
+    //getting class number
+    cout << "What is the number of the class they are in: ";
+    cin >> class_numb;
+
+    if (class_numb == 1)
+    {
+        //Storing in room 1 File
+        file.open("stu_rec_room_1.dat", ios::out | ios::app | ios::binary);
+    }
+    if (class_numb == 2)
+    {
+        //Storing in room 2File
+        file.open("stu_rec_room_2.dat", ios::out | ios::app | ios::binary);
+    }
+    else
+    {
+        cout << "Sorry class number not found";
+    }
+
+
+
+
+    file.write(reinterpret_cast<char*>(&s), sizeof(s));
+    file.close();
+}
+
+void class_1_del()
+{
+    int count = 0;
+
+    cout << "\n\nPlease enter the student's full name : ";
+    cin >> name;
+
+    file.open("stu_rec_room_1.dat", ios::in | ios::binary);
+
+
+
+    if (file.is_open())
+    {
+        while (!file.eof())
+        {
+            while (file.read(reinterpret_cast<char*>(&s), sizeof(s)))// reading the content from the file 
+            {
+                if ((name == s.full_name)) // searching the record by name
+                {
+                    cout << "\n\nFirst Name  : " << s2.full_name << "\n";
+                    cout << "Gender          : " << s2.gen << "\n";
+                    cout << "Maths           : " << s2.maths << "\n";
+                    cout << "Science         : " << s2.sci << "\n";
+                    cout << "Writing         : " << s2.writing << "\n";
+                    cout << "Reading         : " << s2.read << "\n";
+                    cout << s2.other_name << ":" << s2.other << "\n";
+                    cout << "Overall Progress: " << s2.overall_prog << "\n";
+                }
+                else
+                {
+                    count++;
+                    tempfile.open("temp.dat", ios::out | ios::app | ios::binary); // opening in a read mode
+                    tempfile.write(reinterpret_cast<char*>(&s), sizeof(s));
+                    tempfile.close();
+
+                }
+            }
+        }
+    }
+
+    cout << "\n\n No of records stored : " << count;
+
+
+    file.close();
+
+
+    cout << "\nDisplay the records after deletion\n";
+    remove("stu_rec_room_1.dat");
+    rename("temp.dat", "stu_rec_room_1.dat");
+    tempfile.open("temp.dat", ios::in | ios::binary | ios::beg); // opening in a read mode
+
+
+
+    while (tempfile.read(reinterpret_cast<char*>(&s), sizeof(s))) // reading the content from the file 
+    {
+        cout << "\n\nFirst Name  : " << s2.full_name << "\n";
+        cout << "Gender          : " << s2.gen << "\n";
+        cout << "Maths           : " << s2.maths << "\n";
+        cout << "Science         : " << s2.sci << "\n";
+        cout << "Writing         : " << s2.writing << "\n";
+        cout << "Reading         : " << s2.read << "\n";
+        cout << s2.other_name << ":" << s2.other << "\n";
+        cout << "Overall Progress: " << s2.overall_prog << "\n";
+    }
+
+
+    tempfile.close();
+}
+
+
+
+
+void class_2_del()
+{
+    int count = 0;
+
+    cout << "\n\nPlease enter the student's full name : ";
+    cin >> name;
+
+    file.open("stu_rec_room_2.dat", ios::in | ios::binary);
+
+
+
+
+    if (file.is_open())
+    {
+        while (!file.eof())
+        {
+            while (file.read(reinterpret_cast<char*>(&s), sizeof(s)))// reading the content from the file 
+            {
+                if ((name == s.full_name)) // searching the record by name
+                {
+                    cout << "\n\nFirst Name  : " << s2.full_name << "\n";
+                    cout << "Gender          : " << s2.gen << "\n";
+                    cout << "Maths           : " << s2.maths << "\n";
+                    cout << "Science         : " << s2.sci << "\n";
+                    cout << "Writing         : " << s2.writing << "\n";
+                    cout << "Reading         : " << s2.read << "\n";
+                    cout << s2.other_name << ":" << s2.other << "\n";
+                    cout << "Overall Progress: " << s2.overall_prog << "\n";
+                }
+                else
+                {
+                    count++;
+                    tempfile.open("temp.dat", ios::out | ios::app | ios::binary); // opening in a read mode
+                    tempfile.write(reinterpret_cast<char*>(&s), sizeof(s));
+                    tempfile.close();
+
+                }
+            }
+        }
+    }
+
+    cout << "\n\n No of records stored : " << count;
+
+
+    file.close();
+
+
+    cout << "\nDisplay the records after deletion\n";
+    remove("stu_rec_room_2.dat");
+    rename("temp.dat", "stu_rec_room_2.dat");
+    tempfile.open("temp.dat", ios::in | ios::binary | ios::beg); // opening in a read mode
+
+
+
+    while (tempfile.read(reinterpret_cast<char*>(&s), sizeof(s))) // reading the content from the file 
+    {
+        cout << "\n\nFirst Name  : " << s2.full_name << "\n";
+        cout << "Gender          : " << s2.gen << "\n";
+        cout << "Maths           : " << s2.maths << "\n";
+        cout << "Science         : " << s2.sci << "\n";
+        cout << "Writing         : " << s2.writing << "\n";
+        cout << "Reading         : " << s2.read << "\n";
+        cout << s2.other_name << ":" << s2.other << "\n";
+        cout << "Overall Progress: " << s2.overall_prog << "\n";
+    }
+
+
+    tempfile.close();
 }
