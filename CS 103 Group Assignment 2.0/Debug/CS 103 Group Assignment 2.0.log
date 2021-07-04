@@ -1,3 +1,4 @@
 ﻿  CS 103 Group Assignment 2.0.cpp
-C:\Users\Blake\source\repos\CS 103 Group Assignment 2.0\CS 103 Group Assignment 2.0\CS 103 Group Assignment 2.0.cpp(711,34): warning C4244: '=': conversion from 'std::streamoff' to 'int', possible loss of data
-  CS 103 Group Assignment 2.0.vcxproj -> C:\Users\Blake\source\repos\CS 103 Group Assignment 2.0\Debug\CS 103 Group Assignment 2.0.exe
+D:\OneDrive\桌面\bruh\CS 103 Group Assignment 2.0\CS 103 Group Assignment 2.0.cpp(732,34): warning C4244: '=': conversion from 'std::streamoff' to 'int', possible loss of data
+  LINK : D:\OneDrive\桌面\bruh\Debug\CS 103 Group Assignment 2.0.exe not found or not built by the last incremental link; performing full link
+  CS 103 Group Assignment 2.0.vcxproj -> D:\OneDrive\桌面\bruh\Debug\CS 103 Group Assignment 2.0.exe

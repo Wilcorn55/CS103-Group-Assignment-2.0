@@ -401,7 +401,7 @@ void parent_regi(struct Parent& p)
     line();
     cout << "\nPlease enter the following information\n";
 
-    file.open("Admin.dat", ios::out | ios::app | ios::binary);//opening file to add to
+    file.open("Parents.dat", ios::out | ios::app | ios::binary);//opening file to add to
 
     //entering all user info
     cout << "\nEnter full name : ";
